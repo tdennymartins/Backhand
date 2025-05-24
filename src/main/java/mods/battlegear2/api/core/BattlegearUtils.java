@@ -21,6 +21,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import xonin.backhand.Backhand;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
 
 /**
  * Store commonly used method, mostly for the {@link EntityPlayer} {@link ItemStack}s management
