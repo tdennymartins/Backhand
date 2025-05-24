@@ -72,18 +72,26 @@ public class MysteriumPatchesFixesO {
 	}
 
     @Fix(insertOnExit = true)
-    public static void damageItem(ItemStack itemStack, int p_77972_1_, EntityLivingBase p_77972_2_)
-    {
-        if (!(p_77972_2_ instanceof EntityPlayer) || itemStack == null)
-            return;
+  public static void damageItem(ItemStack itemStack, int p_77972_1_, EntityLivingBase p_77972_2_) {
+    if (!(p_77972_2_ instanceof EntityPlayer) || itemStack == null) {
+        return;
+    }
 
-        EntityPlayer player = (EntityPlayer) p_77972_2_;
+    EntityPlayer player = (EntityPlayer) p_77972_2_;
+
+    // Defensive: If offhand code might access internal player capabilities, wrap in try/catch
+    try {
         ItemStack offhandItem = BattlegearUtils.getOffhandItem(player);
         if (offhandItem != null && itemStack == offhandItem && itemStack.stackSize == 0) {
-            BattlegearUtils.setPlayerOffhandItem(player,null);
-            ForgeEventFactory.onPlayerDestroyItem(player,offhandItem);
+            BattlegearUtils.setPlayerOffhandItem(player, null);
+            ForgeEventFactory.onPlayerDestroyItem(player, offhandItem);
         }
+    } catch (Exception e) {
+        // Log or silently handle; avoids crashing due to capability access issues
+        System.err.println("Failed to handle offhand item logic safely: " + e.getMessage());
     }
+}
+
 
     @Fix(insertOnExit = true, returnSetting=EnumReturnSetting.ALWAYS)
     public static EnumAction getItemUseAction(ItemStack itemStack, @ReturnedValue EnumAction returnedAction)
