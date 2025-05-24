@@ -73,12 +73,16 @@ public class BattlegearUtils {
     }
 
     public static ItemStack getOffhandItem(EntityPlayer player) {
-        if (Backhand.UseInventorySlot) {
-            return player.inventory.getStackInSlot(Backhand.AlternateOffhandSlot);
-        } else {
-            return getOffhandEP(player).getOffhandItem();
-        }
+    if (Backhand.UseInventorySlot) {
+        ItemStack stack = player.inventory.getStackInSlot(Backhand.AlternateOffhandSlot);
+        return stack != null ? stack : new ItemStack((Item)null); // safely non-null
+    } else {
+        IOffhandExtendedProperties ep = getOffhandEP(player);
+        ItemStack offhand = (ep != null) ? ep.getOffhandItem() : null;
+        return offhand != null ? offhand : new ItemStack((Item)null);
     }
+}
+
 
     public static OffhandExtendedProperty getOffhandEP(EntityPlayer player) {
         return ((OffhandExtendedProperty)player.getExtendedProperties("OffhandStorage"));
