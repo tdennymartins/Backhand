@@ -75,13 +75,22 @@ public class BattlegearUtils {
     public static ItemStack getOffhandItem(EntityPlayer player) {
     if (Backhand.UseInventorySlot) {
         ItemStack stack = player.inventory.getStackInSlot(Backhand.AlternateOffhandSlot);
-        return stack != null ? stack : new ItemStack((Item)null); // safely non-null
+        return stack != null ? stack : new ItemStack((Item)null);
     } else {
-        IOffhandExtendedProperties ep = getOffhandEP(player);
-        ItemStack offhand = (ep != null) ? ep.getOffhandItem() : null;
-        return offhand != null ? offhand : new ItemStack((Item)null);
+        Object ep = getOffhandEP(player); // don’t require interface
+        if (ep != null) {
+            try {
+                Method m = ep.getClass().getMethod("getOffhandItem");
+                Object result = m.invoke(ep);
+                return result instanceof ItemStack ? (ItemStack) result : new ItemStack((Item)null);
+            } catch (Exception e) {
+                return new ItemStack((Item)null);
+            }
+        }
+        return new ItemStack((Item)null);
     }
 }
+
 
 
     public static OffhandExtendedProperty getOffhandEP(EntityPlayer player) {
