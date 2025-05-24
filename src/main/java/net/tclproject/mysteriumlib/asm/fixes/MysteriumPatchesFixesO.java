@@ -72,7 +72,7 @@ public class MysteriumPatchesFixesO {
 	}
 
     @Fix(insertOnExit = true)
-  public static void damageItem(ItemStack itemStack, int p_77972_1_, EntityLivingBase p_77972_2_) {
+    public static void damageItem(ItemStack itemStack, int p_77972_1_, EntityLivingBase p_77972_2_) {
     if (!(p_77972_2_ instanceof EntityPlayer) || itemStack == null) {
         return;
     }
